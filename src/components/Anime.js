@@ -1,8 +1,10 @@
-import React, { useEffect }  from 'react';
+import React, { useEffect, lazy, Suspense }  from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 // import { useSelector } from 'react-redux';
 import { fetchAnime, fetchCharacter } from '../actions';
-import ShowCharacters from './ShowCharacters';
+// import ShowCharacters from './ShowCharacters';
+
+const ShowCharacters = lazy(()=>import('./ShowCharacters'))
 
 
 const Anime = () => {
@@ -13,7 +15,10 @@ const Anime = () => {
   const id = window.location.href.match(regex)
   
   useEffect(() => {
+
+
     dispatch(fetchAnime(id))
+    dispatch(fetchCharacter(id))
     
   
     return () => {
@@ -23,6 +28,7 @@ const Anime = () => {
   }, [])
 
  const animeDetail = useSelector(state=>state.animes)
+ const characters = useSelector(state=>state.characters)
 
 //  const title = animeDetail.data.attributes.titles.en_jp
   
@@ -60,16 +66,18 @@ const Anime = () => {
     }
   }
 
-  // console.log(animeDetail.data.attributes.titles.en_jp)
+
   return (
     <div>
       
-      {/* <h2>{animeDetail.data.attributes.titles.en_jp} </h2> */}
+
       {renderElements()}
       {/* <ShowCharacters/> */}
-      <ShowCharacters id ={id} />
 
-      {/* <h2>{id}</h2> */}
+      <Suspense fallback = {<p>Loading...</p>}>
+        <ShowCharacters/>
+      </Suspense>
+
     </div>
   )
 }

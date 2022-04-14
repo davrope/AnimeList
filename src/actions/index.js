@@ -12,8 +12,8 @@ export const fetchAnimeList = (term)=> async dispatch=>{
     dispatch({type: FETCH_ANIME_LIST, payload: res.data})
 }
 
-export const fetchFirstAnimeList = ()=> async dispatch=>{
-    const res = await axios.get(URL)
+export const fetchFirstAnimeList = (myURL)=> async dispatch=>{
+    const res = await axios.get(myURL)
 
     dispatch({type: FETCH_ANIME_LIST, payload: res.data})
 }

@@ -4,13 +4,54 @@ import {fetchFirstAnimeList } from '../actions';
 import styled from 'styled-components'
 import {Link as LinkRouter} from 'react-router-dom';
 
+import InfiniteScroll from 'react-infinite-scroller';
+
 import AnimeCard from './AnimeCard';
 import SearchBar from './SearchBar';
 
 
 
-const ShowCards = () => {
+const ShowCardsLab = () => {
+    const dispatch = useDispatch();
+
+    useEffect(()=>{
+        const initialURL = "https://kitsu.io/api/edge/anime"
+        dispatch(fetchFirstAnimeList(initialURL))
+    }, [])
+
+    const animes = useSelector((state)=>state.animes).data
+    const obj = useSelector((state)=>state.animes)
+
+
     // INFINITE SCROLLING
+
+
+  const [episodeList, setEpisodeList] = useState(useSelector(state=>state.animes).data);
+  const [error, setError] = useState();
+  const [loading, setLoading] = useState(false);
+
+    
+  const loadMoreAnimes = async () => {
+    try {
+        
+      if (animes.length<15) {
+          const nextURL = obj.links.next
+        setLoading(true);
+        const { data } =  dispatch(fetchFirstAnimeList(nextURL));
+        const modifiedResults = [...episodeList.results, ...data.results];
+
+        setEpisodeList(
+          (prevState) =>
+            ({ ...prevState, info: data.info, results: modifiedResults }),
+        );
+        setLoading(false);
+      }
+    } catch (error) {
+      setError(error);
+      setLoading(false);
+    }
+  };
+
 
     
     // const observer = useRef();
@@ -34,17 +75,7 @@ const ShowCards = () => {
 
 
 
-    const dispatch = useDispatch();
 
-    useEffect(()=>{
-
-        const myURL = "https://kitsu.io/api/edge/anime"
-        
-        dispatch(fetchFirstAnimeList(myURL))
-    }, [])
-
-    const animes = useSelector((state)=>state.animes).data
-    const obj = useSelector((state)=>state.animes)
 
 
 
@@ -84,18 +115,28 @@ const ShowCards = () => {
 
   return (
     <div>
-        <h2>Anime List</h2>
-        {renderCount()}
+        <h2>Anime List LAB</h2>
         <SearchBar/>
-        <AnimeGrid>
-            {RenderList()}
-        </AnimeGrid>
+        {renderCount()}
+        <InfiniteScroll
+            data-testid = "animes-infinite-scroll"
+            pageStart={0}
+            loadMore={loadMoreAnimes}
+            hasMore={true}
+            loader={<div className="loader" key={0}>Loading ...</div>}
+        >
+            <AnimeGrid>
+                {RenderList()}
+            </AnimeGrid>
+        </InfiniteScroll>
+       
+
     </div>
 
   )
 }
 
-export default ShowCards
+export default ShowCardsLab
 
 const AnimeGrid = styled.div`
     display: grid;
