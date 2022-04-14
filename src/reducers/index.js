@@ -1,7 +1,9 @@
 import {combineReducers} from 'redux';
-import animesReducer from './animesReducer'
+import animesReducer from './animesReducer';
+import charactersReducer from './charactersReducer';
 
 
 export default combineReducers({
-    animes: animesReducer
+    animes: animesReducer,
+    characters: charactersReducer
 })

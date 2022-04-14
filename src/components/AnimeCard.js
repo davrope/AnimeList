@@ -1,13 +1,14 @@
-import React from 'react'
+import React from 'react';
+import {Link as LinkRouter} from 'react-router-dom';
 import styled from 'styled-components'
 
-const AnimeCard = ({anime}) => {
+const AnimeCard = ({anime, id}) => {
   return (
     <CardContainer className='hoverwrap'>
-      <img src = {anime.posterImage.small} alt = "anime poster" style={{objectFit:'cover'}}/>
+      <img src = {anime.attributes.posterImage.small} alt = "anime poster" style={{objectFit:'cover'}}/>
       <div className='hovercap'>
-        <h2>{anime.titles.en_jp}</h2>
-        <p>Favorites: {anime.favoritesCount} </p>
+        <LinkRouter className='linkTitle' to = {`/anime/${id}`}>{anime.attributes.titles.en_jp}</LinkRouter>
+        <p>Favorites: {anime.attributes.favoritesCount} </p>
       </div>
     </CardContainer>
   )
@@ -25,3 +26,4 @@ const CardContainer = styled.div`
   /* max-width: 300px; */
 
 `
+
