@@ -6,6 +6,7 @@ const initialState = []
 export default function foo(state= initialState, action){
     switch(action.type){
         case FETCH_ANIME_LIST:
+            // return [...action.payload]
             return action.payload
             // return [...state, action.payload];
         case FETCH_ANIME:

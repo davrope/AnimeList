@@ -7,10 +7,40 @@ import {Link as LinkRouter} from 'react-router-dom';
 import AnimeCard from './AnimeCard';
 import SearchBar from './SearchBar';
 
+import useNearScreen from '../hooks/useNearScreen';
+import debounce from 'just-debounce-it'
+
 
 
 const ShowCards = () => {
     // INFINITE SCROLLING
+
+    const [loading, setLoading] = useState(false)
+    const [page, setPage] = useState(0)
+
+    const externalRef = useRef()
+    const {isNearScreen} = useNearScreen({
+      externalRef: loading ? null: externalRef,
+      once: false
+    })
+
+    const testfunction = ()=>{
+        // const NextURL= "https://kitsu.io/api/edge/anime?page%5Blimit%5D=10&page%5Boffset%5D=10"
+
+        // dispatch(fetchFirstAnimeList(NextURL))
+        setPage(page+1)
+        console.log("A testing function")
+    }
+  
+    const debounceHandleNextPage = useCallback(debounce(
+    //   ()=>setPage(prevPage=>prevPage+1), 200
+    ()=>testfunction(), 200
+    ), [setPage])
+  
+    useEffect(() => {
+      if(isNearScreen) debounceHandleNextPage()
+    }, [ debounceHandleNextPage, isNearScreen])
+    // }, [debounceHandleNextPage, isNearScreen])
 
     
     // const observer = useRef();
@@ -90,6 +120,7 @@ const ShowCards = () => {
         <AnimeGrid>
             {RenderList()}
         </AnimeGrid>
+        <div id ="visor" ref={externalRef} ></div>
     </div>
 
   )

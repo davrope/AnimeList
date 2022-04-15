@@ -3,7 +3,10 @@ import {Link as LinkRouter} from 'react-router-dom';
 import styled from 'styled-components'
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import { MdFavoriteBorder, MdFavorite } from 'react-icons/md';
-import {AiFillStar, AiOutlineStar} from 'react-icons/ai'
+import {AiFillStar, AiOutlineStar} from 'react-icons/ai';
+
+
+// import { useNearScreen } from '../hooks/useNearScreen';
 
 const AnimeCard = ({anime, id}) => {
 
@@ -16,7 +19,18 @@ const AnimeCard = ({anime, id}) => {
   const [favorite, setFavorite] = useLocalStorage(starKey, false)
   const IconStar = favorite ? AiFillStar : AiOutlineStar
 
-  // const [star, setStar] = useState(second)
+  // *************************
+
+  // useNearScreen reducer for infinite scroll:
+
+
+
+
+  
+
+
+
+
 
 
   return (
