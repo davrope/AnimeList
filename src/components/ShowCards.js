@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {fetchFirstAnimeList } from '../actions';
+import {fetchFirstAnimeList, fetchMoreAnimes } from '../actions';
 import styled from 'styled-components'
 import {Link as LinkRouter} from 'react-router-dom';
 
@@ -24,16 +24,23 @@ const ShowCards = () => {
       once: false
     })
 
-    const testfunction = ()=>{
-        // const NextURL= "https://kitsu.io/api/edge/anime?page%5Blimit%5D=10&page%5Boffset%5D=10"
+    // useEffect(()=>{
+    //     let NextURL= `https://kitsu.io/api/edge/anime?page%5Blimit%5D=10&page%5Boffset%5D=${page}`
+    //     // dispatch(fetchMoreAnimes(NextURL))
+    //     console.log(NextURL)
+    // }, [page])
 
-        // dispatch(fetchFirstAnimeList(NextURL))
-        setPage(page+1)
-        console.log("A testing function")
+    const testfunction = ()=>{
+        setPage(page+10)
+        let NextURL= `https://kitsu.io/api/edge/anime?page%5Blimit%5D=10&page%5Boffset%5D=${page}`
+        // dispatch(fetchMoreAnimes(NextURL))
+        
+        console.log(NextURL)
     }
   
     const debounceHandleNextPage = useCallback(debounce(
     //   ()=>setPage(prevPage=>prevPage+1), 200
+    // ()=>setPage(page+10), 200
     ()=>testfunction(), 200
     ), [setPage])
   
@@ -67,6 +74,9 @@ const ShowCards = () => {
     const dispatch = useDispatch();
 
     useEffect(()=>{
+        
+
+        // dispatch(fetchFirstAnimeList(NextURL))
 
         const myURL = "https://kitsu.io/api/edge/anime"
         
