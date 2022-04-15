@@ -14,6 +14,9 @@ import debounce from 'just-debounce-it'
 
 const ShowCards = () => {
     // INFINITE SCROLLING
+    
+    
+
 
     const [loading, setLoading] = useState(false)
     const [page, setPage] = useState(0)
@@ -24,44 +27,36 @@ const ShowCards = () => {
       once: false
     })
 
-    // useEffect(()=>{
-    //     let NextURL= `https://kitsu.io/api/edge/anime?page%5Blimit%5D=10&page%5Boffset%5D=${page}`
-    //     // dispatch(fetchMoreAnimes(NextURL))
-    //     console.log(NextURL)
-    // }, [page])
 
     const testfunction = ()=>{
-        setPage(page+10)
-        let NextURL= `https://kitsu.io/api/edge/anime?page%5Blimit%5D=10&page%5Boffset%5D=${page}`
+        let NextPage = page+10
+        setPage(NextPage)
+
+        // tryingConsole()
+        // let NextURL= `https://kitsu.io/api/edge/anime?page%5Blimit%5D=10&page%5Boffset%5D=${page}`
         // dispatch(fetchMoreAnimes(NextURL))
         
-        console.log(NextURL)
+        console.log("test")
     }
   
     const debounceHandleNextPage = useCallback(debounce(
     //   ()=>setPage(prevPage=>prevPage+1), 200
-    // ()=>setPage(page+10), 200
-    ()=>testfunction(), 200
+    ()=>setPage(page+10), 200
+    // ()=>testfunction(), 200
     ), [setPage])
   
     useEffect(() => {
       if(isNearScreen) debounceHandleNextPage()
-    }, [ debounceHandleNextPage, isNearScreen])
-    // }, [debounceHandleNextPage, isNearScreen])
 
+
+
+      let NextURL= `https://kitsu.io/api/edge/anime?page%5Blimit%5D=10&page%5Boffset%5D=${page}`
+    //   dispatch(fetchMoreAnimes(NextURL))
+    //   tryingConsole()
+
+      
     
-    // const observer = useRef();
-    // const lastAnimeElementRef = useCallback(node=>{
-    //     // if (loading) return
-    //     if (observer.current) observer.current.disconnect();
-    //     observer.current = new IntersectionObserver(entries =>{
-    //         if(entries[0].isIntersecting){
-    //             setPageNumber(prevPageNumber=>prevPageNumber+1)
-
-    //         }
-    //     })
-    //     if(node) observer.current.observe(node)
-    // }, [])
+    }, [ debounceHandleNextPage, isNearScreen])
 
 
 
@@ -81,19 +76,71 @@ const ShowCards = () => {
         const myURL = "https://kitsu.io/api/edge/anime"
         
         dispatch(fetchFirstAnimeList(myURL))
+        // let animes = useSelector((state)=>state.animes).data
+
+        setTotalAnimes(animes)
+        
+        
+
     }, [])
 
-    const animes = useSelector((state)=>state.animes).data
+    // const animesState = useSelector((state)=>state.animes).data
     const obj = useSelector((state)=>state.animes)
+    
+    
+    let animes = useSelector((state)=>state.animes).data
 
+    const [totalAnimes, setTotalAnimes] = useState([animes])
 
+    
+    // console.log(totalAnimes)
+    const  tryingConsole =()=>{
+        
+
+        console.log(totalAnimes)
+        if(!totalAnimes){
+            setTotalAnimes(animes)
+        }else if(totalAnimes != animes) {
+            try{
+                console.log("settotalanimes... prevstate")
+                //  setTotalAnimes(prevState =>[...prevState, ...animes])
+                // setTotalAnimes(prevState =>[...prevState, ...animes])
+            }catch(e){
+                console.log(e)
+            }
+            
+        }
+
+        
+        
+    }
+
+    useEffect(()=>{
+        console.log(animes)
+
+        let NextURL= `https://kitsu.io/api/edge/anime?page%5Blimit%5D=10&page%5Boffset%5D=${page}`
+
+        // dispatch(fetchMoreAnimes(NextURL))
+        tryingConsole()
+    }, [page, debounceHandleNextPage, isNearScreen])
 
 
     const RenderList =()=>{
         try{
+            console.log(totalAnimes)
+            // let iterableAnimes= null
+            
+            // if(!totalAnimes){
+            //      iterableAnimes = animes
+            // }else{
+            //     iterableAnimes= totalAnimes
+                
+            // }
+            // let iterableAnimes =  totalAnimes || animes
+            let iterableAnimes = animes
             // console.log(animes)
-            return animes.map((element, index)=>{
-                if(animes.length === index+1){
+            return iterableAnimes.map((element, index)=>{
+                if(iterableAnimes.length === index+1){
                     return(
                         <AnimeCard anime={element} id={element.id} key={element.id} />
                     )

@@ -28,7 +28,29 @@ const Anime = () => {
   }, [])
 
  const animeDetail = useSelector(state=>state.animes)
- const characters = useSelector(state=>state.characters)
+ const charactersState = useSelector(state=>state.characters)
+
+ function  RenderCharacters(){
+  try{
+      // const characters = charactersState[0].data
+      const characters = charactersState.data
+      console.log(characters)
+      // return(
+      //     <div>
+      //         {characters.id}
+      //     </div>
+      // )
+      return characters.map((element)=>{
+          return(
+              <p>
+                 Character: {element.id}
+              </p>
+          )
+      })
+  }catch(error){
+      console.log(error)
+  }
+}
 
 //  const title = animeDetail.data.attributes.titles.en_jp
   
@@ -73,6 +95,7 @@ const Anime = () => {
 
       {renderElements()}
       {/* <ShowCharacters/> */}
+      {RenderCharacters()}
 
       <Suspense fallback = {<p>Loading...</p>}>
         <ShowCharacters/>

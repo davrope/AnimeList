@@ -11,7 +11,7 @@ const App = () => {
   return (
     <Router>
         <Routes>
-            {/* <Route path= "/" element= {<ShowCards/>}/> */}
+            {/* <Route path= "/" element= {<ShowCardsLab/>}/> */}
             <Route path= "/" element= {<ShowCards/>}/>
             <Route path = "/anime/:id" element = {<Anime/>}/>
         </Routes>
