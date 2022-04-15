@@ -6,4 +6,6 @@ export const SET_LIKE = 'set_like';
 export const FETCH_MORE_ANIMES = 'fetch_more_animes';
 
 
-export const FETCH_CHARACTER_LIST = 'fetch_character_list'
+export const FETCH_CHARACTER_LIST = 'fetch_character_list';
+
+export const FETCH_EPISODES = 'fetch_episodes'

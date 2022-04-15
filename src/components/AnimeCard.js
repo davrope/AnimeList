@@ -21,32 +21,25 @@ const AnimeCard = ({anime, id}) => {
 
   // *************************
 
-  // useNearScreen reducer for infinite scroll:
-
-
-
-
-  
-
-
-
-
-
 
   return (
     <CardContainer className='hoverwrap'>
       <img src = {anime.attributes.posterImage.small} alt = "anime poster" style={{objectFit:'cover'}}/>
       <div className='hovercap'>
         <LinkRouter className='linkTitle' to = {`/anime/${id}`}>{anime.attributes.titles.en_jp}</LinkRouter>
-        <p>Favorites: {anime.attributes.favoritesCount} </p>
+        <br/>
+       <IconsContainer>
+         <div style={{display:'flex', marginLeft:'auto', marginRight:'auto'}}>
+          <Icon size='32px' onClick={()=>setLiked(!liked)} style={{color:'red'}}/> {anime.attributes.favoritesCount}
+            
 
-        <button onClick={()=>setLiked(!liked)}>
-          <Icon size='32px'/> {anime.attributes.favoritesCount} likes!
-        </button>
+            
+            <IconStar size = '32px' onClick={()=>setFavorite(!favorite)} style={{color:'yellow'}} />{anime.attributes.favoritesCount}
+         </div>
 
-        <button onClick={()=>setFavorite(!favorite)}>
-          <IconStar size = '32px'>{anime.attributes.favoritesCount}</IconStar>
-        </button>
+       </IconsContainer>
+ 
+        
 
       </div>
     </CardContainer>
@@ -65,4 +58,31 @@ const CardContainer = styled.div`
   /* max-width: 300px; */
 
 `
+const IconsContainer = styled.div`
+  position: relative;
+  display: flex;
+  height: 50%;
+  width: 100%;
+  /* margin-top: 15px; */
+  align-items: center;
+  align-content: center
+  /* margin 15px auto auto auto */
 
+  
+  /* background-color: green; */
+  
+  /* width: fit-content; */
+  /* height: fit-content; */
+  /* max-width: 300px; */
+
+`
+
+
+// const StarFilled = styled.AiFillStar`
+//   background-color: yellow;
+//   /* background-color: green; */
+//   /* width: fit-content; */
+//   /* height: fit-content; */
+//   /* max-width: 300px; */
+
+// `

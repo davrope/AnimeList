@@ -1,5 +1,5 @@
 import axios from 'axios'
-import {FETCH_ANIME_LIST, FETCH_ANIME, SET_FAVORITE, SET_LIKE, FETCH_CHARACTER_LIST, FETCH_MORE_ANIMES} from "../actions/types";
+import {FETCH_ANIME_LIST, FETCH_ANIME, SET_FAVORITE, SET_LIKE, FETCH_CHARACTER_LIST, FETCH_MORE_ANIMES, FETCH_EPISODES} from "../actions/types";
 
 const URL = "https://kitsu.io/api/edge/anime"
 
@@ -36,4 +36,10 @@ export const fetchCharacter = id => async dispatch=>{
     const res = await axios.get(URL+`/${id}`+`/characters`)
 
     dispatch({type: FETCH_CHARACTER_LIST, payload: res.data})
+}
+
+export const fetchEpisodes = id => async dispatch=>{
+    const res = await axios.get(URL+`/${id}`+`/episodes`)
+
+    dispatch({type: FETCH_EPISODES, payload: res.data})
 }

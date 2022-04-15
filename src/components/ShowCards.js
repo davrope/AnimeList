@@ -103,6 +103,7 @@ const ShowCards = () => {
         }else if(totalAnimes != animes) {
             try{
                 console.log("settotalanimes... prevstate")
+                setTotalAnimes(animes)
                 //  setTotalAnimes(prevState =>[...prevState, ...animes])
                 // setTotalAnimes(prevState =>[...prevState, ...animes])
             }catch(e){
@@ -156,6 +157,29 @@ const ShowCards = () => {
         }
     } 
 
+    const RenderMore=()=>{
+        try{
+            console.log(totalAnimes)
+
+            let iterableAnimes = totalAnimes || animes
+            // console.log(animes)
+            return iterableAnimes.map((element, index)=>{
+                if(iterableAnimes.length === index+1){
+                    return(
+                        <AnimeCard anime={element} id={element.id} key={element.id} />
+                    )
+                }else{
+                    return(
+                        <AnimeCard anime={element}  id={element.id} key={element.id} />
+                    )
+                }
+
+            })
+        }catch(error){
+            console.log(error)
+        }
+    }
+
     const renderCount = ()=>{
         try{
             return(
@@ -178,6 +202,9 @@ const ShowCards = () => {
             {RenderList()}
         </AnimeGrid>
         <div id ="visor" ref={externalRef} ></div>
+        <AnimeGrid>
+            {RenderMore()}
+        </AnimeGrid>
     </div>
 
   )

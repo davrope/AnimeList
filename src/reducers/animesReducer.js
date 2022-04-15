@@ -37,6 +37,6 @@ export default function foo(state= initialState, action){
         // case FETCH_CHARACTER_LIST:
         //     return action.payload;
         default:
-            return [...state]
+            return {...state}
     }
 }

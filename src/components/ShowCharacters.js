@@ -26,7 +26,7 @@ const  ShowCharacters = () => {
         try{
             // const characters = charactersState[0].data
             const characters = charactersState[0].data
-            console.log(characters)
+            // console.log(characters)
             // return(
             //     <div>
             //         {characters.id}
