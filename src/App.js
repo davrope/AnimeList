@@ -3,7 +3,7 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import {Route, Routes} from 'react-router-dom';
 
 import ShowCards from './components/ShowCards';
-import ShowCardsLab2 from './components/ShowCardsLab2';
+import ShowCardsLab from './components/ShowCardsLab';
 import Anime from './components/Anime';
 import { AnimesContextProvider } from './context/AnimesContext';
 
@@ -15,7 +15,7 @@ const App = () => {
 
         <Routes>
             {/* <Route path= "/" element= {<ShowCardsLab2/>}/> */}
-            <Route path= "/" element= {<ShowCards/>}/>
+            <Route path= "/" element= {<ShowCardsLab/>}/>
             <Route path = "/anime/:id" element = {<Anime/>}/>
         </Routes>
         </AnimesContextProvider>

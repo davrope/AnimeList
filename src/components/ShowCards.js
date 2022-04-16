@@ -5,7 +5,8 @@ import styled from 'styled-components'
 import {Link as LinkRouter} from 'react-router-dom';
 
 import AnimeCard from './AnimeCard';
-import SearchBar from './SearchBar';
+// import SearchBar from './SearchBar';
+import SearchBarLab from './SearchBarLab';
 
 import useNearScreen from '../hooks/useNearScreen';
 import debounce from 'just-debounce-it'
@@ -185,7 +186,8 @@ const ShowCards = () => {
     <div>
         <h2>Anime List</h2>
         {renderCount()}
-        <SearchBar/>
+        <SearchBarLab/>
+        {/* <SearchBar/> */}
         <AnimeGrid>
             {RenderList()}
         </AnimeGrid>

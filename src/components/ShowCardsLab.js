@@ -1,189 +1,296 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {fetchFirstAnimeList } from '../actions';
+import {fetchFirstAnimeList, fetchMoreAnimes } from '../actions';
 import styled from 'styled-components'
+import { MdFavoriteBorder, MdFavorite } from 'react-icons/md';
+import {AiFillStar, AiOutlineStar} from 'react-icons/ai';
 import {Link as LinkRouter} from 'react-router-dom';
 
-import InfiniteScroll from 'react-infinite-scroller';
-
 import AnimeCard from './AnimeCard';
-import SearchBar from './SearchBar';
+// import SearchBar from './SearchBar';
+import SearchBarLab from './SearchBarLab';
 
-import useAnimeSearch from '../hooks/useAnimeSearch'
+import useNearScreen from '../hooks/useNearScreen';
+import debounce from 'just-debounce-it'
 
 
 
 const ShowCardsLab = () => {
+    // INFINITE SCROLLING
 
-    // youtube infinite scroll
-    const [query, setQuery] = useState('')
-    const [pageNumber, setPageNumber] = useState(0)
+    const [starFilter, setStarFilter] = useState(false)
+    const [likeFilter, setLikeFilter] = useState(false)
 
-    const {
-        animes,
-        hasMore,
-        loading,
-        error
-    } = useAnimeSearch(query, pageNumber)
+    const IconLike = likeFilter ? MdFavorite : MdFavoriteBorder
+    const IconStar = starFilter ? AiFillStar : AiOutlineStar
 
-    const observer = useRef()
-    const lastAnimeElementRef = useCallback(node=>{
-        if(loading) return
-        if(observer.current) observer.current.disconnect()
-        observer.current = new IntersectionObserver(entries=>{
-            if(entries[0].isIntersecting && hasMore){
-                setPageNumber(prevPageNumber => prevPageNumber+1)
+    const myStorage = window.localStorage
+
+    console.log(myStorage)
+    
+    
+
+
+
+    const [loading, setLoading] = useState(false)
+    const [page, setPage] = useState(0)
+
+    const externalRef = useRef()
+    const {isNearScreen} = useNearScreen({
+      externalRef: loading ? null: externalRef,
+      once: false
+    })
+
+
+    const testfunction = ()=>{
+        let NextPage = page+10
+        setPage(NextPage)
+
+    }
+  
+    const debounceHandleNextPage = useCallback(debounce(
+    ()=>setPage(page+10), 200
+    // ()=>testfunction(), 200
+    ), [setPage])
+  
+    useEffect(() => {
+      if(isNearScreen) debounceHandleNextPage()
+
+      let NextURL= `https://kitsu.io/api/edge/anime?page%5Blimit%5D=10&page%5Boffset%5D=${page}`
+
+    }, [ debounceHandleNextPage, isNearScreen])
+
+
+
+    // ********************
+
+
+
+
+
+    const dispatch = useDispatch();
+
+    useEffect(()=>{
+        const myURL = "https://kitsu.io/api/edge/anime"
+        
+        dispatch(fetchFirstAnimeList(myURL))
+        setTotalAnimes(animes)
+        
+    }, [])
+
+    const obj = useSelector((state)=>state.animes)
+    
+    
+    let animes = useSelector((state)=>state.animes).data
+
+    const [totalAnimes, setTotalAnimes] = useState([animes])
+
+    
+    
+    const  tryingConsole =()=>{
+        
+        if(!totalAnimes){
+            setTotalAnimes(animes)
+        }else if(totalAnimes != animes) {
+            try{
+                console.log("settotalanimes... prevstate")
+                setTotalAnimes(animes)
+
+            }catch(e){
+                console.log(e)
             }
-        })
-        if (node) observer.current.observe(node)
-    }, [loading, hasMore])
-
-    function handleSearch(e){
-        setQuery(e.target.value)
-        setPageNumber(0)
+            
+        }
+        
     }
 
-    return (
-        <>
-          <input type="text" value={query} onChange={handleSearch}></input>
-          {animes.map((anime, index) => {
-            if (animes.length === index + 1) {
-              return <div ref={lastAnimeElementRef} key={anime}>{anime}</div>
-            } else {
-              return <div key={anime}>{anime}</div>
+    useEffect(()=>{
+        tryingConsole()
+    }, [page, debounceHandleNextPage, isNearScreen])
+
+
+    const RenderList =()=>{
+      if(!starFilter&& !likeFilter){
+        try{
+
+            let iterableAnimes = animes
+            
+            return iterableAnimes.map((element, index)=>{
+                if(iterableAnimes.length === index+1){
+                    return(
+                        <AnimeCard anime={element} id={element.id} key={element.id} />
+                    )
+                }else{
+                    return(
+                        <AnimeCard anime={element}  id={element.id} key={element.id} />
+                    )
+                }
+
+            })
+        }catch(error){
+            console.log(error)
+        }
+      }
+    } 
+
+    const RenderMore=()=>{
+      if(!starFilter&& !likeFilter){
+
+      
+        try{
+            
+            let iterableAnimes = totalAnimes || animes
+            // console.log(animes)
+            return iterableAnimes.map((element, index)=>{
+                if(iterableAnimes.length === index+1){
+                    return(
+                        <AnimeCard anime={element} id={element.id} key={element.id} />
+                    )
+                }else{
+                    return(
+                        <AnimeCard anime={element}  id={element.id} key={element.id} />
+                    )
+                }
+
+            })
+        }catch(error){
+            console.log(error)
+        }
+      }else{
+        return(
+          <div></div>
+        )
+      }
+    }
+
+    const renderCount = ()=>{
+        try{
+            return(
+                <p>{obj.meta.count} Results</p>
+            )
+        }catch(error){
+            console.log(error)
+        }
+    }
+
+
+
+
+    function myGeneralFilterHandler(){
+      if(starFilter){
+        return StarFilterHandler()
+      }else if(likeFilter){
+        return LikedFilterHandler()
+      }else if(starFilter && likeFilter){
+        try{
+
+          let iterableAnimes = totalAnimes || animes
+
+          return iterableAnimes.map((element, index)=>{
+            if(myStorage[`star-${element.id}`] && myStorage[`like-${element.id}`]){
+                return(
+                    <AnimeCard anime={element} id={element.id} key={element.id} />
+                )
+            }else{
+                return
             }
-          })}
-          <div>{loading && 'Loading...'}</div>
-          <div>{error && 'Error'}</div>
-        </>
-      )
 
-    // *******************
-//     const dispatch = useDispatch();
+        })
 
-//     useEffect(()=>{
-//         const initialURL = "https://kitsu.io/api/edge/anime"
-//         dispatch(fetchFirstAnimeList(initialURL))
-//     }, [])
+        }catch(error){
+          console.log(error)
+        }
+      }else{
+        return
+      }
+    }
+    function StarFilterHandler(){
+      if(starFilter){
+        try{
 
-//     const animes = useSelector((state)=>state.animes).data
-//     const obj = useSelector((state)=>state.animes)
+          let iterableAnimes = totalAnimes || animes
+
+          return iterableAnimes.map((element, index)=>{
+            if(myStorage[`star-${element.id}`]){
+                return(
+                    <AnimeCard anime={element} id={element.id} key={element.id} />
+                )
+            }else{
+                return
+            }
+
+        })
+
+        }catch(error){
+          console.log(error)
+        }
+        // return(
+        //   <div>
+        //     Star Filter clicked
+        //   </div>
+        // )
+      }else{
+        return
+          // return(
+          //   RenderList()
+          // )
+        }
+    }
+
+    function LikedFilterHandler(){
+      if(likeFilter){
+        try{
+
+          let iterableAnimes = totalAnimes || animes
+
+          return iterableAnimes.map((element, index)=>{
+            if(myStorage[`like-${element.id}`]){
+                return(
+                    <AnimeCard anime={element} id={element.id} key={element.id} />
+                )
+            }else{
+                return
+            }
+
+        })
+
+        }catch(error){
+          console.log(error)
+        }
+      }else{
+        return
+        }
+    }
 
 
-//     // INFINITE SCROLLING
-
-
-//   const [episodeList, setEpisodeList] = useState(useSelector(state=>state.animes).data);
-//   const [error, setError] = useState();
-//   const [loading, setLoading] = useState(false);
 
     
-//   const loadMoreAnimes =  () => {
-//     try {
+
+  return (
+    <div>
+        <h2>Anime List</h2>
+        {renderCount()}
+        <SearchBarLab/>
+        <div style={{textAlign:'center', marginTop:"15px", marginBottom:"15px", fontSize:'1.5rem'}}>
+          Filter<br/>
+          <IconStar size="32px"  onClick= {()=>setStarFilter(!starFilter)}/>
+          <IconLike size="32px" onClick= {()=>setLikeFilter(!likeFilter)}/>
+        </div>
+        {/* <SearchBar/> */}
+        <AnimeGrid>
+          {myGeneralFilterHandler()}
+            {/* {StarFilterHandler()}
+            {LikedFilterHandler()} */}
+            {RenderList()}
+        </AnimeGrid>
         
-//       if (animes.length<15) {
-//           const nextURL = obj.links.next
-//           console.log("pasó por aquí")
-//         setLoading(true);
-//         const { data } =  dispatch(fetchFirstAnimeList(nextURL));
-//         const modifiedResults = [...episodeList.results, ...data.results];
+        {/* <AnimeGrid>
+            {RenderMore()}
+        </AnimeGrid> */}
+        <div id ="visor" ref={externalRef} ></div>
+    </div>
 
-//         setEpisodeList(
-//           (prevState) =>
-//             ({ ...prevState, info: data.info, results: modifiedResults }),
-//         );
-//         setLoading(false);
-//       }
-//     } catch (error) {
-//       setError(error);
-//       setLoading(false);
-//     }
-//   };
-
-
-
-
-    
-//     // const observer = useRef();
-//     // const lastAnimeElementRef = useCallback(node=>{
-//     //     // if (loading) return
-//     //     if (observer.current) observer.current.disconnect();
-//     //     observer.current = new IntersectionObserver(entries =>{
-//     //         if(entries[0].isIntersecting){
-//     //             setPageNumber(prevPageNumber=>prevPageNumber+1)
-
-//     //         }
-//     //     })
-//     //     if(node) observer.current.observe(node)
-//     // }, [])
-
-
-
-//     // ********************
-
-
-
-
-
-
-
-
-
-
-//     const RenderList =()=>{
-//         try{
-//             // console.log(animes)
-//             return animes.map((element, index)=>{
-//                 if(animes.length === index+1){
-//                     return(
-//                         <AnimeCard anime={element} id={element.id} key={element.id} />
-//                     )
-//                 }else{
-//                     return(
-//                         <AnimeCard anime={element}  id={element.id} key={element.id} />
-//                     )
-//                 }
-
-//             })
-//         }catch(error){
-//             console.log(error)
-//         }
-//     } 
-
-//     const renderCount = ()=>{
-//         try{
-//             return(
-//                 <p>{obj.meta.count} Results</p>
-//             )
-//         }catch(error){
-//             console.log(error)
-//         }
-//     }
-
-
-    
-
-//   return (
-//     <div>
-//         <h2>Anime List LAB</h2>
-//         <SearchBar />
-//         {renderCount()}
-//         <InfiniteScroll
-//             data-testid = "animes-infinite-scroll"
-//             pageStart={0}
-//             loadMore={loadMoreAnimes}
-//             hasMore={true}
-//             loader={<div className="loader" key={0}>Loading ...</div>}
-//         >
-//             <AnimeGrid>
-//                 {RenderList()}
-//             </AnimeGrid>
-//         </InfiniteScroll>
-       
-
-//     </div>
-
-//   )
+  )
 }
 
 export default ShowCardsLab
