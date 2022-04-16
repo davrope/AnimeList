@@ -8,6 +8,7 @@ import { fetchAnime, fetchCharacter, fetchEpisodes } from '../actions';
 import { MdFavoriteBorder, MdFavorite } from 'react-icons/md';
 import {AiFillStar, AiOutlineStar} from 'react-icons/ai';
 import styled from 'styled-components'
+import {Link as LinkRouter} from 'react-router-dom'
 
 
 const ShowCharacters = lazy(()=>import('./ShowCharacters'))
@@ -46,53 +47,8 @@ const Anime = () => {
  const episodesState = useSelector(state=>state.episodes)
 
 
-  function RenderEpisodesLab(){
-    try{
-      const episodes = episodesState[1].data || episodesState[0].data ||episodes.data
-
-      return episodes.map((element)=>{
-        const {id} = element
-        const {airdate} = element.attributes
-        const {number} = element.attributes
-
-        const strCreated = new Date(airdate).toLocaleDateString()
-
-        return(
-          <div key={id}>
-            <p>{strCreated} {number}:  {element.attributes.titles.canonicalTitle || element.attributes.titles.en_us} </p>
-          </div>
-          
-        )
-      })
 
 
-    }catch(error){
-      console.log(error)
-    }
-  }
-
-
- function  RenderCharacters(){
-  try{
-
-      const characters = charactersState.data
-
-      return characters.map((element)=>{
-          return(
-            <div key={element.id}>
-              <p >
-                 Character: {element.id}
-              </p>
-            </div>
-
-          )
-      })
-  }catch(error){
-      console.log(error)
-  }
-}
-
-//  const title = animeDetail.data.attributes.titles.en_jp
 const key = `like-${id}`
 const [liked, setLiked] = useLocalStorage(key, false)
 const Icon = liked ? MdFavorite : MdFavoriteBorder
@@ -103,33 +59,52 @@ const IconStar = favorite ? AiFillStar : AiOutlineStar
   
 
   function renderElements(){
+
+
     try{
-      const title = animeDetail.data.attributes.titles.en_jp
-      const {synopsis} = animeDetail.data.attributes
-      const poster = animeDetail.data.attributes.posterImage.small
-      const {popularityRank} = animeDetail.data.attributes
-      const {favoritesCount} = animeDetail.data.attributes
-      const {startDate} = animeDetail.data.attributes
-      const typeAnime = animeDetail.data.attributes.subtype
+      const {attributes} = animeDetail.data
+
+      const title = attributes.titles.en_jp
+      const {synopsis} =  attributes
+      const poster = attributes.posterImage.small
+      const {popularityRank} = attributes
+      const {favoritesCount} = attributes
+      const {startDate} = attributes
+      const typeAnime = attributes.subtype
+      const {ageRating} = attributes
+      const {userCount} = attributes
+      const {endDate} = attributes
+      const {ageRatingGuide} = attributes
 
 
-      
+      const emission = ()=>{
+        if(endDate){
+          return (`Ended on: ${endDate}`)
+        }else{
+          return("Ongoing")
+        }
+      }
 
-      // console.log(characters)
+
       return(
         <div>
 
           <h2>{title}</h2>
+          <LinkRouter to="/"> Back</LinkRouter>
           <AnimeDetailContainer>
             <Col25>
               <img src= {poster} alt= 'anime poster'/>
 
               <div style={{display:'block', marginLeft:'auto', marginRight:'auto', alignText:'center'}}>
-                <Icon size='32px' onClick= {()=>setLiked(!liked)}style={{color:'red'}}/>{favoritesCount}
-                <IconStar size = '32px' onClick={()=>setFavorite(!favorite)} style={{color:'yellow'}} />{favoritesCount}
+                <IconStar size = '32px' onClick={()=>setFavorite(!favorite)} style={{color:'yellow'}} />{favoritesCount} from {userCount} users
+                
+                
               </div>
+              <Icon size='32px' onClick= {()=>setLiked(!liked)}style={{color:'red'}}/>{favoritesCount} 
               <p>Rank: #{popularityRank} </p>
+              <p>Rated {ageRating}: {ageRatingGuide} </p>
               <p>Aired on: {startDate} </p>
+              <p>{emission()} </p>
               <p>Type: {typeAnime.toUpperCase()} </p>
             </Col25>
 
@@ -140,17 +115,12 @@ const IconStar = favorite ? AiFillStar : AiOutlineStar
               <Suspense fallback = {<p>Loading...</p>}>
                 <ShowCharacters/>
               </Suspense>
-              {RenderEpisodesLab()}
+
+              <Suspense fallback ={<p>Loading</p>}>
+                <ShowEpisodes/>
+              </Suspense>
+
             </Col75>
-
-          
-          
-          
-          
-
-
-          {/* Need to make a function for ongoing or ended on Date */}
-
           
 
           </AnimeDetailContainer>

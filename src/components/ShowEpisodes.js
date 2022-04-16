@@ -1,41 +1,55 @@
 import React, { useEffect }  from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchCharacter } from '../actions';
+import { fetchCharacter, fetchEpisodes } from '../actions';
 
-const  ShowEpisodes = (id) => {
+
+
+
+
+const  ShowEpisodes = () => {
 
     const dispatch = useDispatch();
-
-    // const regex = /(?<=anime\/).*/g
+    const regex = /(?<=anime\/).*/g
   
-    // const id = window.location.href.match(regex)
-
+    const id = window.location.href.match(regex)
 
     useEffect(() => {
-        dispatch(fetchCharacter(id))
-    
-    //   return () => {
-    //     console.log("fetch characters")
-    //   }
+        dispatch(fetchEpisodes(id))
+
     }, [])
+
+    function RenderEpisodesLab(){
+        try{
+          const episodes = episodesState[1].data || episodesState[0].data ||episodes.data
+    
+          return episodes.map((element)=>{
+            const {id} = element
+            const {airdate} = element.attributes
+            const {number} = element.attributes
+    
+            const strCreated = new Date(airdate).toLocaleDateString()
+    
+            return(
+              <div key={id}>
+                <p>{strCreated} {number}:  {element.attributes.titles.canonicalTitle || element.attributes.titles.en_us || element.attributes.titles.en_jp} </p>
+              </div>
+              
+            )
+          })
+    
+    
+        }catch(error){
+          console.log(error)
+        }
+      }
 
 
     const episodesState = useSelector(state=>state.episodes)
 
     function  RenderEspisodes(){
         try{
-            // const characters = charactersState[0].data
-            // const episodes = 
-            // const characters = charactersState[0].data
-            console.log(episodesState)
+            return RenderEpisodesLab()
 
-            // return episodes.map((element)=>{
-            //     return(
-            //         <p>
-            //            Character: {element.id}
-            //         </p>
-            //     )
-            // })
         }catch(error){
             console.log(error)
         }
@@ -44,7 +58,7 @@ const  ShowEpisodes = (id) => {
   return (
     <div>
         {RenderEspisodes()}
-        Hola
+        
     </div>
   )
 }

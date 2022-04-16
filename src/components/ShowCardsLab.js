@@ -31,32 +31,7 @@ const ShowCardsLab = () => {
     const [page, setPage] = useState(10)
 
     const externalRef = useRef()
-    const {isNearScreen} = useNearScreen({
-      externalRef: loading ? null: externalRef,
-      once: false
-    })
 
-
-    const testfunction = ()=>{
-        let NextPage = page+10
-        setPage(NextPage)
-
-    }
-  
-    // const debounceHandleNextPage = useCallback(debounce(
-    // ()=>setPage(page+10), 200
-    // // ()=>testfunction(), 200
-    // ), [setPage])
-  
-    // useEffect(() => {
-    //   if(isNearScreen) debounceHandleNextPage()
-    //   // console.log(page)
-
-    //   // let NextURL= `https://kitsu.io/api/edge/anime?page%5Blimit%5D=10&page%5Boffset%5D=${page}`
-    //   // dispatch(fetchMoreAnimes(NextURL))
-    //   // console.log("bottom")
-
-    // }, [ debounceHandleNextPage, isNearScreen])
 
     // NEW APPROACH FOR INFINITE SCROLLING
 
@@ -96,23 +71,7 @@ const ShowCardsLab = () => {
     const [totalAnimes, setTotalAnimes] = useState([animes])
 
     
-    
-    const  tryingConsole =()=>{
-        
-        if(!totalAnimes){
-            setTotalAnimes(animes)
-        }else if(totalAnimes != animes) {
-            try{
-                
-                setTotalAnimes(animes)
 
-            }catch(e){
-                console.log(e)
-            }
-            
-        }
-        
-    }
 
     // useEffect(()=>{
     //   // console.log(page)
@@ -150,35 +109,7 @@ const ShowCardsLab = () => {
       }
     } 
 
-    const RenderMore=()=>{
-      if(!starFilter&& !likeFilter){
 
-      
-        try{
-            
-            let iterableAnimes = totalAnimes || animes
-            // console.log(animes)
-            return iterableAnimes.map((element, index)=>{
-                if(iterableAnimes.length === index+1){
-                    return(
-                        <AnimeCard anime={element} id={element.id} key={element.id} />
-                    )
-                }else{
-                    return(
-                        <AnimeCard anime={element}  id={element.id} key={element.id} />
-                    )
-                }
-
-            })
-        }catch(error){
-            console.log(error)
-        }
-      }else{
-        return(
-          <div></div>
-        )
-      }
-    }
 
     const renderCount = ()=>{
         try{
@@ -311,13 +242,8 @@ const AnimeGrid = styled.div`
     gap: 40px;
     justify-content: center;
     grid-template-columns: repeat(auto-fit, 284px);
-    /* padding: 15px 284px 15px 284px; */
     margin-left: auto;
     margin-right: auto;
     max-width: 1600px;
-
-    /* @media screen and (max-width:960px) {
-        padding: 15px 284px 15px 284px;      
-    } */
 
 `
