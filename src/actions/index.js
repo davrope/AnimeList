@@ -33,7 +33,9 @@ export const fetchAnime = id => async dispatch=>{
 }
 
 export const fetchCharacter = id => async dispatch=>{
-    const res = await axios.get(URL+`/${id}`+`/characters`)
+
+    const charactersURL = `https://kitsu.io/api/edge/anime/${id}/characters?include=character`
+    const res = await axios.get(charactersURL)
 
     dispatch({type: FETCH_CHARACTER_LIST, payload: res.data})
 }

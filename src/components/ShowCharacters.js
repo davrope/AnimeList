@@ -25,7 +25,10 @@ const  ShowCharacters = () => {
     function  RenderCharacters(){
         try{
             // const characters = charactersState[0].data
-            const characters = charactersState[0].data
+            const characters = charactersState[0].included || charactersState[0].included
+
+            
+
             // console.log(characters)
             // return(
             //     <div>
@@ -33,10 +36,15 @@ const  ShowCharacters = () => {
             //     </div>
             // )
             return characters.map((element)=>{
+                const {attributes} = element
+
+                const {name} = attributes
+                const characterImage = attributes.image.original
                 return(
-                    <p>
-                       Character: {element.id}
-                    </p>
+                    <div>
+                        <img src={characterImage}/>
+                        {name}
+                    </div>
                 )
             })
         }catch(error){
