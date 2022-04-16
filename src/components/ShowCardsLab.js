@@ -11,7 +11,8 @@ import AnimeCard from './AnimeCard';
 import SearchBarLab from './SearchBarLab';
 
 import useNearScreen from '../hooks/useNearScreen';
-import debounce from 'just-debounce-it'
+import debounce from 'lodash.debounce'
+// import debounce from 'just-debounce-it'
 
 
 
@@ -26,14 +27,8 @@ const ShowCardsLab = () => {
 
     const myStorage = window.localStorage
 
-    console.log(myStorage)
-    
-    
-
-
-
     const [loading, setLoading] = useState(false)
-    const [page, setPage] = useState(0)
+    const [page, setPage] = useState(10)
 
     const externalRef = useRef()
     const {isNearScreen} = useNearScreen({
@@ -48,18 +43,33 @@ const ShowCardsLab = () => {
 
     }
   
-    const debounceHandleNextPage = useCallback(debounce(
-    ()=>setPage(page+10), 200
-    // ()=>testfunction(), 200
-    ), [setPage])
+    // const debounceHandleNextPage = useCallback(debounce(
+    // ()=>setPage(page+10), 200
+    // // ()=>testfunction(), 200
+    // ), [setPage])
   
-    useEffect(() => {
-      if(isNearScreen) debounceHandleNextPage()
+    // useEffect(() => {
+    //   if(isNearScreen) debounceHandleNextPage()
+    //   // console.log(page)
 
-      let NextURL= `https://kitsu.io/api/edge/anime?page%5Blimit%5D=10&page%5Boffset%5D=${page}`
+    //   // let NextURL= `https://kitsu.io/api/edge/anime?page%5Blimit%5D=10&page%5Boffset%5D=${page}`
+    //   // dispatch(fetchMoreAnimes(NextURL))
+    //   // console.log("bottom")
 
-    }, [ debounceHandleNextPage, isNearScreen])
+    // }, [ debounceHandleNextPage, isNearScreen])
 
+    // NEW APPROACH FOR INFINITE SCROLLING
+
+    // let pagesCounter = 0;
+    console.log("Pages outside: " + page)
+    let NextURL= `https://kitsu.io/api/edge/anime?page%5Blimit%5D=10&page%5Boffset%5D=${page}`
+    window.onscroll = debounce(()=>{
+      if(window.innerHeight + document.documentElement.scrollTop === document.documentElement.offsetHeight){
+        dispatch(fetchMoreAnimes(NextURL))
+        setPage(page+10)
+        console.log("pages inside: "+page)
+      }
+    }, 100)
 
 
     // ********************
@@ -93,7 +103,7 @@ const ShowCardsLab = () => {
             setTotalAnimes(animes)
         }else if(totalAnimes != animes) {
             try{
-                console.log("settotalanimes... prevstate")
+                
                 setTotalAnimes(animes)
 
             }catch(e){
@@ -104,9 +114,13 @@ const ShowCardsLab = () => {
         
     }
 
-    useEffect(()=>{
-        tryingConsole()
-    }, [page, debounceHandleNextPage, isNearScreen])
+    // useEffect(()=>{
+    //   // console.log(page)
+
+    //   let NextURL= `https://kitsu.io/api/edge/anime?page%5Blimit%5D=10&page%5Boffset%5D=${page}`
+    //   // dispatch(fetchMoreAnimes(NextURL))
+    //     // tryingConsole()
+    // }, [page, debounceHandleNextPage, isNearScreen])
 
 
     const RenderList =()=>{
@@ -116,15 +130,18 @@ const ShowCardsLab = () => {
             let iterableAnimes = animes
             
             return iterableAnimes.map((element, index)=>{
-                if(iterableAnimes.length === index+1){
-                    return(
+                  return(
                         <AnimeCard anime={element} id={element.id} key={element.id} />
                     )
-                }else{
-                    return(
-                        <AnimeCard anime={element}  id={element.id} key={element.id} />
-                    )
-                }
+                // if(iterableAnimes.length === index+1){
+                //     return(
+                //         <AnimeCard anime={element} id={element.id} key={element.id} />
+                //     )
+                // }else{
+                //     return(
+                //         <AnimeCard anime={element}  id={element.id} key={element.id} />
+                //     )
+                // }
 
             })
         }catch(error){
@@ -222,13 +239,7 @@ const ShowCardsLab = () => {
         })
 
         }catch(error){
-          console.log(error)
-        }
-        // return(
-        //   <div>
-        //     Star Filter clicked
-        //   </div>
-        // )
+          console.log(error)}
       }else{
         return
           // return(

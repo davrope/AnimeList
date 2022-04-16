@@ -22,7 +22,12 @@ export default function foo(state= initialState, action){
             // return {animes:[...state, action.payload]}
             // return [...state, ...action.payload]
             // return [...state.animes.data, action.payload ]
-
+            const newAnime = action.payload.data
+            const {data} = state
+            return {
+                ...state,
+                data:[...data, ...newAnime]
+            }
             return action.payload
         case FETCH_ANIME_LIST:
             // return [...action.payload]
