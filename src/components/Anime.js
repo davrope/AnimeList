@@ -10,6 +10,8 @@ import {AiFillStar, AiOutlineStar} from 'react-icons/ai';
 import styled from 'styled-components'
 import {Link as LinkRouter} from 'react-router-dom';
 import {IoChevronBackOutline} from 'react-icons/io5';
+import {AiOutlineCheckCircle,AiFillCheckCircle } from 'react-icons/ai'
+
 
 
 const ShowCharacters = lazy(()=>import('./ShowCharacters'))
@@ -18,6 +20,11 @@ const ShowEpisodes = lazy(()=>import('./ShowEpisodes'))
 
 
 const Anime = () => {
+
+
+
+  const myStorage = window.localStorage
+
 
   // const animeContext = React.useContext()
 
