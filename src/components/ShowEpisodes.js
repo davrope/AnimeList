@@ -30,8 +30,8 @@ const  ShowEpisodes = () => {
             const strCreated = new Date(airdate).toLocaleDateString()
     
             return(
-              <div key={id}>
-                <p>{strCreated} {number}:  {element.attributes.titles.canonicalTitle || element.attributes.titles.en_us || element.attributes.titles.en_jp} </p>
+              <div key={id} >
+                <p style={{textAlign:'left'}}>{strCreated} <b>{number}</b>:  {element.attributes.titles.canonicalTitle || element.attributes.titles.en_us || element.attributes.titles.en_jp} </p>
               </div>
               
             )

@@ -1,6 +1,7 @@
 import React, { useEffect }  from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchCharacter } from '../actions';
+import CharactersCard from './CharactersCard';
 
 const  ShowCharacters = () => {
 
@@ -27,24 +28,18 @@ const  ShowCharacters = () => {
             // const characters = charactersState[0].data
             const characters = charactersState[0].included || charactersState[0].included
 
-            
 
-            // console.log(characters)
-            // return(
-            //     <div>
-            //         {characters.id}
-            //     </div>
-            // )
             return characters.map((element)=>{
                 const {attributes} = element
 
                 const {name} = attributes
                 const characterImage = attributes.image.original
                 return(
-                    <div>
-                        <img src={characterImage}/>
-                        {name}
-                    </div>
+                    <CharactersCard character={name} img={characterImage}/>
+                    // <div>
+                    //     <img src={characterImage}/>
+                    //     {name}
+                    // </div>
                 )
             })
         }catch(error){
@@ -53,10 +48,11 @@ const  ShowCharacters = () => {
     }
     
   return (
-    <div>
+    <>
         {RenderCharacters()}
-    </div>
+    </>
   )
 }
 
 export default ShowCharacters
+

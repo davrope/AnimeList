@@ -8,7 +8,8 @@ import { fetchAnime, fetchCharacter, fetchEpisodes } from '../actions';
 import { MdFavoriteBorder, MdFavorite } from 'react-icons/md';
 import {AiFillStar, AiOutlineStar} from 'react-icons/ai';
 import styled from 'styled-components'
-import {Link as LinkRouter} from 'react-router-dom'
+import {Link as LinkRouter} from 'react-router-dom';
+import {IoChevronBackOutline} from 'react-icons/io5';
 
 
 const ShowCharacters = lazy(()=>import('./ShowCharacters'))
@@ -90,7 +91,10 @@ const IconStar = favorite ? AiFillStar : AiOutlineStar
         <div>
 
           <h2>{title}</h2>
-          <LinkRouter to="/"> Back</LinkRouter>
+          
+          <LinkRouter to="/" style={{fontSize:'24px' ,textDecoration:'none', color:'blue', alignItems:'center'}}> 
+          <IoChevronBackOutline size="16px" style={{color:'blue'}}/>Back
+          </LinkRouter>
           <AnimeDetailContainer>
             <Col25>
               <img src= {poster} alt= 'anime poster'/>
@@ -109,16 +113,33 @@ const IconStar = favorite ? AiFillStar : AiOutlineStar
             </Col25>
 
             <Col75>
-              <div><p>{synopsis} </p></div>
+              <div style={{textAlign:'justify'}}><p>{synopsis} </p></div>
               
 
               <Suspense fallback = {<p>Loading...</p>}>
-                <ShowCharacters/>
+
+                <AnimeSubtitle>
+                  Characters
+                </AnimeSubtitle>
+                <CharactersGrid>
+
+                  <ShowCharacters/>
+                </CharactersGrid>
+
+
               </Suspense>
+              <AnimeSubtitle>
+                Episodes
+              </AnimeSubtitle>
+              {/* <div style={{textAlign:'left'}}>
+                  <b>Episodes: </b>
+                </div> */}
 
               <Suspense fallback ={<p>Loading</p>}>
                 <ShowEpisodes/>
               </Suspense>
+
+
 
             </Col75>
           
@@ -164,8 +185,8 @@ const AnimeDetailContainer = styled.div`
   display: flex;
   flex-direction: row;
 
-
-  @media screen and (max-width: 600px) {
+  @media screen and (max-width: 750px) {
+  /* @media screen and (max-width: 1008px) { */
 
     flex-direction: column;
 
@@ -175,11 +196,11 @@ const AnimeDetailContainer = styled.div`
 const Col25 = styled.div`
 
   width: 300px;
-  margin-top: 5px;
+  margin-top: 20px;
   display: block;
   text-align: center;
 
-  @media screen and (max-width: 600px) {
+  @media screen and (max-width: 750px) {
     width: 100%;
     margin-top: 0%;
 
@@ -189,15 +210,51 @@ const Col25 = styled.div`
 const Col75 = styled.div`
   display: block;
   float: left;
-  width: 70%;
+  width: 80%;
+  /* width: ${props => props.takeViewportWidth && `width: calc(100vh - 300px);`}; */
+  /* width: calc(100%-300px); */
+  /* width: 70%; */
+  /* max-width: 1200px; */
   margin-top: 5px;
   margin-left: 15px;
   margin-right: 15px;
   text-align: center;
 
-  @media screen and (max-width: 600px) {
-    width: 100%;
+  @media screen and (max-width: 1500px) {
+    width: 70%;
     margin-top: 0%;
     
   }
+  @media screen and (max-width: 1013px) {
+    width: 60%;
+    margin-top: 0%;
+    
+  }
+
+  @media screen and (max-width: 750px) {
+    width: 95%;
+    margin-top: 0%;
+  }
+`
+
+const CharactersGrid = styled.div`
+    display: grid;
+    gap: 10px;
+    /* justify-content: center; */
+    grid-template-columns: repeat(auto-fit, 225px);
+    /* margin-left: auto;
+    margin-right: auto; */
+    max-width: 1600px;
+    @media screen and (max-width: 750px) {
+      justify-content: center;
+  }
+
+`
+const AnimeSubtitle = styled.div`
+  text-align: left;
+  font-size: 1.3rem;
+  font-weight: bold;
+  margin-bottom: 15px;
+  margin-top: 15px;
+
 `
