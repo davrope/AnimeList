@@ -1,16 +1,23 @@
 import React, { useEffect, lazy, Suspense, useState }  from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useLocalStorage } from '../hooks/useLocalStorage';
 import axios from 'axios'
 // import { useSelector } from 'react-redux';
 import { fetchAnime, fetchCharacter, fetchEpisodes } from '../actions';
 // import ShowCharacters from './ShowCharacters';
+import { MdFavoriteBorder, MdFavorite } from 'react-icons/md';
+import {AiFillStar, AiOutlineStar} from 'react-icons/ai';
 import styled from 'styled-components'
+
 
 const ShowCharacters = lazy(()=>import('./ShowCharacters'))
 const ShowEpisodes = lazy(()=>import('./ShowEpisodes'))
 
 
+
 const Anime = () => {
+
+  // const animeContext = React.useContext()
 
 
   const dispatch = useDispatch();
@@ -86,6 +93,13 @@ const Anime = () => {
 }
 
 //  const title = animeDetail.data.attributes.titles.en_jp
+const key = `like-${id}`
+const [liked, setLiked] = useLocalStorage(key, false)
+const Icon = liked ? MdFavorite : MdFavoriteBorder
+
+const starKey = `star-${id}`
+const [favorite, setFavorite] = useLocalStorage(starKey, false)
+const IconStar = favorite ? AiFillStar : AiOutlineStar
   
 
   function renderElements(){
@@ -98,6 +112,9 @@ const Anime = () => {
       const {startDate} = animeDetail.data.attributes
       const typeAnime = animeDetail.data.attributes.subtype
 
+
+      
+
       // console.log(characters)
       return(
         <div>
@@ -106,7 +123,11 @@ const Anime = () => {
           <AnimeDetailContainer>
             <Col25>
               <img src= {poster} alt= 'anime poster'/>
-              <p>corazones {favoritesCount} </p>
+
+              <div style={{display:'block', marginLeft:'auto', marginRight:'auto', alignText:'center'}}>
+                <Icon size='32px' onClick= {()=>setLiked(!liked)}style={{color:'red'}}/>{favoritesCount}
+                <IconStar size = '32px' onClick={()=>setFavorite(!favorite)} style={{color:'yellow'}} />{favoritesCount}
+              </div>
               <p>Rank: #{popularityRank} </p>
               <p>Aired on: {startDate} </p>
               <p>Type: {typeAnime.toUpperCase()} </p>
@@ -182,8 +203,7 @@ const AnimeDetailContainer = styled.div`
 `
 
 const Col25 = styled.div`
-  /* float: left; */
-/*  */
+
   width: 300px;
   margin-top: 5px;
   display: block;
@@ -192,7 +212,7 @@ const Col25 = styled.div`
   @media screen and (max-width: 600px) {
     width: 100%;
     margin-top: 0%;
-    /* flex-direction: column; */
+
   }
 `
 
@@ -208,6 +228,6 @@ const Col75 = styled.div`
   @media screen and (max-width: 600px) {
     width: 100%;
     margin-top: 0%;
-    /* flex-direction: column; */
+    
   }
 `

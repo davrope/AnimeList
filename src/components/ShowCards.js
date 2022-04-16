@@ -76,15 +76,12 @@ const ShowCards = () => {
         const myURL = "https://kitsu.io/api/edge/anime"
         
         dispatch(fetchFirstAnimeList(myURL))
-        // let animes = useSelector((state)=>state.animes).data
-
         setTotalAnimes(animes)
         
         
 
     }, [])
 
-    // const animesState = useSelector((state)=>state.animes).data
     const obj = useSelector((state)=>state.animes)
     
     
@@ -93,7 +90,7 @@ const ShowCards = () => {
     const [totalAnimes, setTotalAnimes] = useState([animes])
 
     
-    // console.log(totalAnimes)
+    
     const  tryingConsole =()=>{
         
 
@@ -117,7 +114,7 @@ const ShowCards = () => {
     }
 
     useEffect(()=>{
-        console.log(animes)
+        
 
         let NextURL= `https://kitsu.io/api/edge/anime?page%5Blimit%5D=10&page%5Boffset%5D=${page}`
 
@@ -128,16 +125,7 @@ const ShowCards = () => {
 
     const RenderList =()=>{
         try{
-            console.log(totalAnimes)
-            // let iterableAnimes= null
-            
-            // if(!totalAnimes){
-            //      iterableAnimes = animes
-            // }else{
-            //     iterableAnimes= totalAnimes
-                
-            // }
-            // let iterableAnimes =  totalAnimes || animes
+
             let iterableAnimes = animes
             // console.log(animes)
             return iterableAnimes.map((element, index)=>{
