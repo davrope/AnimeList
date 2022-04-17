@@ -23,7 +23,7 @@ const Anime = () => {
 
 
 
-  const myStorage = window.localStorage
+
 
 
   // const animeContext = React.useContext()
@@ -106,12 +106,18 @@ const IconStar = favorite ? AiFillStar : AiOutlineStar
             <Col25>
               <img src= {poster} alt= 'anime poster'/>
 
-              <div style={{display:'block', marginLeft:'auto', marginRight:'auto', alignText:'center'}}>
-                <IconStar size = '32px' onClick={()=>setFavorite(!favorite)} style={{color:'yellow'}} />{favoritesCount} from {userCount} users
+              <AnimeIconContainer >
+                <IconStar size = '32px' onClick={()=>setFavorite(!favorite)} style={{color:'yellow', paddingTop:'6px'}} />
+                <p>{favoritesCount} from {userCount} users</p>
                 
-                
-              </div>
-              <Icon size='32px' onClick= {()=>setLiked(!liked)}style={{color:'red'}}/>{favoritesCount} 
+              </AnimeIconContainer>
+              <AnimeIconContainer>
+                 <Icon size='32px' onClick= {()=>setLiked(!liked)}style={{color:'red', paddingTop:'6px'}}/>
+                <p>{favoritesCount} </p>
+              </AnimeIconContainer>
+
+              
+              
               <p>Rank: #{popularityRank} </p>
               <p>Rated {ageRating}: {ageRatingGuide} </p>
               <p>Aired on: {startDate} </p>
@@ -206,6 +212,9 @@ const Col25 = styled.div`
   margin-top: 20px;
   display: block;
   text-align: center;
+  background-color: #0f0f0f;
+  color:white;
+  
 
   @media screen and (max-width: 750px) {
     width: 100%;
@@ -265,3 +274,10 @@ const AnimeSubtitle = styled.div`
   margin-top: 15px;
 
 `
+const AnimeIconContainer = styled.div`
+  display: flex;
+  margin-left: auto;
+  justify-content: center;
+
+`
+

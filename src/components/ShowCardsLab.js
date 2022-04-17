@@ -1,18 +1,16 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {fetchFirstAnimeList, fetchMoreAnimes } from '../actions';
 import styled from 'styled-components'
 import { MdFavoriteBorder, MdFavorite } from 'react-icons/md';
 import {AiFillStar, AiOutlineStar} from 'react-icons/ai';
-import {Link as LinkRouter} from 'react-router-dom';
+
 
 import AnimeCard from './AnimeCard';
-// import SearchBar from './SearchBar';
 import SearchBarLab from './SearchBarLab';
 
-import useNearScreen from '../hooks/useNearScreen';
 import debounce from 'lodash.debounce'
-// import debounce from 'just-debounce-it'
+
 
 
 
@@ -27,7 +25,6 @@ const ShowCardsLab = () => {
 
     const myStorage = window.localStorage
 
-    const [loading, setLoading] = useState(false)
     const [page, setPage] = useState(10)
 
     const externalRef = useRef()
@@ -36,13 +33,13 @@ const ShowCardsLab = () => {
     // NEW APPROACH FOR INFINITE SCROLLING
 
     // let pagesCounter = 0;
-    console.log("Pages outside: " + page)
+    // console.log("Pages outside: " + page)
     let NextURL= `https://kitsu.io/api/edge/anime?page%5Blimit%5D=10&page%5Boffset%5D=${page}`
     window.onscroll = debounce(()=>{
       if(window.innerHeight + document.documentElement.scrollTop === document.documentElement.offsetHeight){
         dispatch(fetchMoreAnimes(NextURL))
         setPage(page+10)
-        console.log("pages inside: "+page)
+        // console.log("pages inside: "+page)
       }
     }, 100)
 
@@ -70,16 +67,6 @@ const ShowCardsLab = () => {
 
     const [totalAnimes, setTotalAnimes] = useState([animes])
 
-    
-
-
-    // useEffect(()=>{
-    //   // console.log(page)
-
-    //   let NextURL= `https://kitsu.io/api/edge/anime?page%5Blimit%5D=10&page%5Boffset%5D=${page}`
-    //   // dispatch(fetchMoreAnimes(NextURL))
-    //     // tryingConsole()
-    // }, [page, debounceHandleNextPage, isNearScreen])
 
 
     const RenderList =()=>{
@@ -92,15 +79,6 @@ const ShowCardsLab = () => {
                   return(
                         <AnimeCard anime={element} id={element.id} key={element.id} />
                     )
-                // if(iterableAnimes.length === index+1){
-                //     return(
-                //         <AnimeCard anime={element} id={element.id} key={element.id} />
-                //     )
-                // }else{
-                //     return(
-                //         <AnimeCard anime={element}  id={element.id} key={element.id} />
-                //     )
-                // }
 
             })
         }catch(error){
@@ -114,7 +92,7 @@ const ShowCardsLab = () => {
     const renderCount = ()=>{
         try{
             return(
-                <p>{obj.meta.count} Results</p>
+                <AnimeCount>{obj.meta.count} Results</AnimeCount>
             )
         }catch(error){
             console.log(error)
@@ -173,9 +151,7 @@ const ShowCardsLab = () => {
           console.log(error)}
       }else{
         return
-          // return(
-          //   RenderList()
-          // )
+
         }
     }
 
@@ -211,24 +187,23 @@ const ShowCardsLab = () => {
   return (
     <div>
         <h2>Anime List</h2>
-        {renderCount()}
-        <SearchBarLab/>
-        <div style={{textAlign:'center', marginTop:"15px", marginBottom:"15px", fontSize:'1.5rem'}}>
-          Filter<br/>
-          <IconStar size="32px"  onClick= {()=>setStarFilter(!starFilter)}/>
-          <IconLike size="32px" onClick= {()=>setLikeFilter(!likeFilter)}/>
-        </div>
-        {/* <SearchBar/> */}
+        <HeaderContainer >
+          <FilterContainer >
+              Filter<br/>
+              <IconStar size="32px"  onClick= {()=>setStarFilter(!starFilter)}/>
+              <IconLike size="32px" onClick= {()=>setLikeFilter(!likeFilter)}/>
+          </FilterContainer>
+          
+          <SearchBarLab/>
+          {renderCount()}
+        </HeaderContainer>
+
+
         <AnimeGrid>
           {myGeneralFilterHandler()}
-            {/* {StarFilterHandler()}
-            {LikedFilterHandler()} */}
             {RenderList()}
         </AnimeGrid>
         
-        {/* <AnimeGrid>
-            {RenderMore()}
-        </AnimeGrid> */}
         <div id ="visor" ref={externalRef} ></div>
     </div>
 
@@ -246,4 +221,39 @@ const AnimeGrid = styled.div`
     margin-right: auto;
     max-width: 1600px;
 
+`
+
+const HeaderContainer = styled.div`
+  display: flex;
+  font-size: 1.3rem ;
+  align-items: center;
+  justify-content: center;
+
+  margin: auto 120px auto 120px;
+
+  @media screen and (max-width: 943px) {
+      margin: auto;
+      font-size: 1rem;
+      flex-direction: column;
+  }
+`
+const FilterContainer = styled.div`
+  text-align: center;
+  margin-top: 15px;
+  margin-bottom: 15px;
+  margin-right: auto;
+
+  @media screen and (max-width: 943px) {
+      width: 100%;
+      
+  }
+
+`
+const AnimeCount= styled.p`
+
+  margin-left: auto;
+  @media screen and (max-width: 943px) {
+        width: 100%;
+        text-align: center;
+    }
 `
