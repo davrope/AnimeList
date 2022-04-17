@@ -21,12 +21,7 @@ const ShowEpisodes = lazy(()=>import('./ShowEpisodes'))
 
 const Anime = () => {
 
-
-
-
-
-
-  // const animeContext = React.useContext()
+  const [loading, setLoading] = useState(true)
 
 
   const dispatch = useDispatch();
@@ -54,6 +49,13 @@ const Anime = () => {
  const charactersState = useSelector(state=>state.characters)
  const episodesState = useSelector(state=>state.episodes)
 
+ useEffect(()=>{
+  setTimeout(() => {
+    setLoading(false)
+  },500);
+},[charactersState])
+
+
 
 
 
@@ -64,6 +66,27 @@ const Icon = liked ? MdFavorite : MdFavoriteBorder
 const starKey = `star-${id}`
 const [favorite, setFavorite] = useLocalStorage(starKey, false)
 const IconStar = favorite ? AiFillStar : AiOutlineStar
+
+function RenderCharacters(){
+  if (loading){
+    return (<p>Loading...</p>)
+  }else{
+    return(
+      <Suspense fallback = {<p>Loading...</p>}>
+
+        <AnimeSubtitle>
+          Characters
+        </AnimeSubtitle>
+        <CharactersGrid>
+
+          <ShowCharacters id={id} />
+        </CharactersGrid>
+
+
+    </Suspense>
+    )
+  }
+}
   
 
   function renderElements(){
@@ -128,8 +151,8 @@ const IconStar = favorite ? AiFillStar : AiOutlineStar
             <Col75>
               <div style={{textAlign:'justify'}}><p>{synopsis} </p></div>
               
-
-              <Suspense fallback = {<p>Loading...</p>}>
+              {RenderCharacters()}
+              {/* <Suspense fallback = {<p>Loading...</p>}>
 
                 <AnimeSubtitle>
                   Characters
@@ -140,7 +163,7 @@ const IconStar = favorite ? AiFillStar : AiOutlineStar
                 </CharactersGrid>
 
 
-              </Suspense>
+              </Suspense> */}
               <AnimeSubtitle>
                 Episodes
               </AnimeSubtitle>

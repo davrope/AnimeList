@@ -5,8 +5,8 @@ const initialState = []
 export default function foo(state= initialState, action){
     switch(action.type){
         case FETCH_EPISODES:
-            return [...state, action.payload]
+            return action.payload
         default:
-            return [...state]
+            return state
     }
 }

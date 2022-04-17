@@ -23,9 +23,11 @@ const  ShowEpisodes = () => {
 
     }, [])
 
+    const episodesState = useSelector(state=>state.episodes)
+
     function RenderEpisodesLab(){
         try{
-          const episodes = episodesState[1].data || episodesState[0].data ||episodes.data
+          const episodes = episodesState.data|| episodesState[1].data || episodesState[0].data ||episodes.data
     
           return episodes.map((element)=>{
             const {id} = element
@@ -53,7 +55,7 @@ const  ShowEpisodes = () => {
       }
 
 
-    const episodesState = useSelector(state=>state.episodes)
+    
 
     function  RenderEspisodes(){
         try{
