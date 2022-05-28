@@ -30,11 +30,9 @@ const AnimeCard = ({anime, id}) => {
         <br/>
        <IconsContainer>
          <div style={{display:'flex', marginLeft:'auto', marginRight:'auto'}}>
+           <IconStar size = '32px' onClick={()=>setFavorite(!favorite)} style={{color:'yellow'}} />{anime.attributes.averageRating}
           <Icon size='32px' onClick={()=>setLiked(!liked)} style={{color:'red'}}/> {anime.attributes.favoritesCount}
-            
 
-            
-            <IconStar size = '32px' onClick={()=>setFavorite(!favorite)} style={{color:'yellow'}} />{anime.attributes.favoritesCount}
          </div>
 
        </IconsContainer>

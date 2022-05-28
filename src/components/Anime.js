@@ -2,15 +2,13 @@ import React, { useEffect, lazy, Suspense, useState }  from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import axios from 'axios'
-// import { useSelector } from 'react-redux';
 import { fetchAnime, fetchCharacter, fetchEpisodes } from '../actions';
-// import ShowCharacters from './ShowCharacters';
 import { MdFavoriteBorder, MdFavorite } from 'react-icons/md';
 import {AiFillStar, AiOutlineStar} from 'react-icons/ai';
 import styled from 'styled-components'
 import {Link as LinkRouter} from 'react-router-dom';
 import {IoChevronBackOutline} from 'react-icons/io5';
-import {AiOutlineCheckCircle,AiFillCheckCircle } from 'react-icons/ai'
+
 
 
 
@@ -106,6 +104,7 @@ function RenderCharacters(){
       const {userCount} = attributes
       const {endDate} = attributes
       const {ageRatingGuide} = attributes
+      const {averageRating} = attributes
 
 
       const emission = ()=>{
@@ -131,7 +130,7 @@ function RenderCharacters(){
 
               <AnimeIconContainer >
                 <IconStar size = '32px' onClick={()=>setFavorite(!favorite)} style={{color:'yellow', paddingTop:'6px'}} />
-                <p>{favoritesCount} from {userCount} users</p>
+                <p>{averageRating} from {userCount} users</p>
                 
               </AnimeIconContainer>
               <AnimeIconContainer>
