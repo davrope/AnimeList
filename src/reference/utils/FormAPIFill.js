@@ -46,11 +46,7 @@ const FormAPIFill = () => {
         event.preventDefault()
         
         console.log(formValues)
-        // dispatch(submitFoodAPI(formValues))
-        // setSubmit(!submit)
-    
-        
-        
+
       }
     
     
@@ -63,11 +59,11 @@ const FormAPIFill = () => {
             <label>Title</label>
             <SearchBar/>
             <Suggestions results = {animes ? animes: []} />
-            <input type='text' name= "title" onChange={handleInputChange}></input>
+            <input type='text' name= "title" onChange={handleInputChange} value={formValues.title}></input>
             <label>synopsis</label>
-            <input type='text' name= 'synopsis' onChange={handleInputChange}/>
+            <input type='text' name= 'synopsis' onChange={handleInputChange} value={formValues.synopsis}/>
             <label>Favorites count</label>
-            <input type='number' step="any" name='favoritesCount' onChange={handleInputChange}></input>
+            <input type='number' step="any" name='favoritesCount' onChange={handleInputChange} value={formValues.favoritesCount}></input>
             <button class="ui primary button" type="submit">Submit</button>
         </form>
     </div>
